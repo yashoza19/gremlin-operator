@@ -1,0 +1,20 @@
+apiVersion: gremlin.com/v1alpha1
+kind: Gremlin
+metadata:
+  name: gremlin-sample
+spec:
+  gremlin:
+    container:
+      driver: crio-runc
+    hostPID: true
+    podSecurity:
+      seccomp:
+        enabled: true
+      securityContextConstraints:
+        create: true
+    secret:
+      clusterID: my-cluster
+      managed: true
+      teamID: 
+      teamSecret: 
+      type: secret
