@@ -16,7 +16,7 @@ metadata:
                 "driver": "crio-runc"
               },
               "collect":{
-                "processes": "true"
+                "processes": true
               },
               "hostPID": true,
               "podSecurity": {
@@ -131,8 +131,11 @@ spec:
 
     The Gremlin operator aims to provide easy configuration and installation of the Gremlin Client components with secret-based authentication(Team ID and Team Secret) to get up and running quickly.
 
+    Gremlin provides an open-source Machine Config Operator (MCO) for installing the Gremlin SELinux policy to Worker nodes using the Openshift 4 Command-Line Interface (CLI). The MCO files and instructions are available from the [Gremlin Field Solutions GitHub repository](https://github.com/gremlin/field-solutions/tree/main/gremlin-ocp4-mc).
+
     ## Usage
 
+    * Install the Machine Config Operator(MCO) using the following [instructions](https://github.com/gremlin/field-solutions/tree/main/gremlin-ocp4-mc)
     * Gremlin requires authentication during installation. Before deploying the Gremlin CR, make sure to change the Gremlin credentials(TeamID and TeamSecret)
     * Deploy a basic Gremlin client on to the OpenShift cluster by creating a new Gremlin resource in the namespace where the operator is installed.
 
@@ -145,6 +148,8 @@ spec:
       gremlin:
         container:
           driver: crio-runc
+        collect:
+          processes: true
         hostPID: true
         podSecurity:
           seccomp:
