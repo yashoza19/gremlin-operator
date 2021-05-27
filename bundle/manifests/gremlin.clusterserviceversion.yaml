@@ -1,0 +1,415 @@
+apiVersion: operators.coreos.com/v1alpha1
+kind: ClusterServiceVersion
+metadata:
+  annotations:
+    alm-examples: |-
+      [
+        {
+          "apiVersion": "gremlin.com/v1alpha1",
+          "kind": "Gremlin",
+          "metadata": {
+            "name": "gremlin-sample"
+          },
+          "spec": {
+            "gremlin": {
+              "container": {
+                "driver": "crio-runc"
+              },
+              "hostPID": true,
+              "podSecurity": {
+                "seccomp": {
+                  "enabled": true
+                },
+                "securityContextConstraints": {
+                  "create": true
+                }
+              },
+              "secret": {
+                "clusterID": "my-cluster",
+                "managed": true,
+                "teamID": "your-team-id",
+                "teamSecret": "your-team-secret",
+                "type": "secret"
+              }
+            }
+          }
+        }
+      ]
+    capabilities: Basic Install
+    operators.operatorframework.io/builder: operator-sdk-v1.6.2
+    createdAt: "2021-05-26 12:00:00"
+    certified: "false"
+    containerImage: quay.io/yoza/gremlin-controller:2.16.2
+    operators.operatorframework.io/project_layout: helm.sdk.operatorframework.io/v1
+  name: gremlin.v2.16.2
+  namespace: placeholder
+spec:
+  apiservicedefinitions: {}
+  customresourcedefinitions:
+    owned:
+    - kind: Gremlin
+      name: gremlins.gremlin.com
+      version: v1alpha1
+      displayName: Gremlin CR
+      description: Gremlin CR is the representation of a Grelmin Client deployment on OpenShift cluster.
+      resources:
+      - kind: Gremlin
+        name: ''
+        version: v1alpha1
+      - kind: ConfigMap
+        name: ''
+        version: v1
+      - kind: CronJob
+        name: ''
+        version: v1beta1
+      - kind: Deployment
+        name: ''
+        version: v1
+      - kind: Pod
+        name: ''
+        version: v1
+      - kind: ReplicaSet
+        name: ''
+        version: v1
+      - kind: Secret
+        name: ''
+        version: v1
+      specDescriptors:
+      - displayName: Team ID
+        description: String uniquely identifying this kubernetes cluster in Gremlin
+        path: gremlin.secret.teamID
+        x-descriptors:
+          - 'urn:alm:descriptor:com.tectonic.ui:password'
+          - 'urn:alm:descriptor:com.tectonic.ui:fieldGroup:Secret'
+      - displayName: Team Secret
+        description: Secret authentication for Gremlin requires teamSecret
+        path: gremlin.secret.teamSecret
+        x-descriptors:
+          - 'urn:alm:descriptor:com.tectonic.ui:password'
+          - 'urn:alm:descriptor:com.tectonic.ui:fieldGroup:Secret'
+      - displayName: Cluster ID
+        description: String uniquely identifying this kubernetes cluster in Gremlin (e.g. my-cluster)
+        path: gremlin.secret.clusterID
+        x-descriptors:
+          - 'urn:alm:descriptor:com.tectonic.ui:text'
+          - 'urn:alm:descriptor:com.tectonic.ui:fieldGroup:Secret'
+      - displayName: Pull Policy
+        description: image pull policy for Chao image, 'Always' by default
+        path: chaoimage.pullPolicy
+        x-descriptors:
+          - 'urn:alm:descriptor:com.tectonic.ui:imagePullPolicy'
+          - 'urn:alm:descriptor:com.tectonic.ui:fieldGroup:ChaoImage'
+      - displayName: Image Repository
+        description: image repository for Chao image, 'gremlin/chao' by default
+        path: chaoimage.repository
+        x-descriptors:
+          - 'urn:alm:descriptor:com.tectonic.ui:text'
+          - 'urn:alm:descriptor:com.tectonic.ui:fieldGroup:ChaoImage'
+      - displayName: Image Tag
+        description: image version tag for Chao image, 'latest' by default
+        path: chaoimage.tag
+        x-descriptors:
+          - 'urn:alm:descriptor:com.tectonic.ui:text'
+          - 'urn:alm:descriptor:com.tectonic.ui:fieldGroup:ChaoImage'
+      - displayName: hostNetwork
+        description: This must be true for any Gremlin installation that wishes to carry out network attacks at the host-level
+        path: gremlin.hostNetwork
+        x-descriptors:
+          - urn:alm:descriptor:com.tectonic.ui:booleanSwitch
+          - 'urn:alm:descriptor:com.tectonic.ui:fieldGroup:Gremlin'
+      - displayName: hostPID
+        description: This must be true for Gremlin container drivers- `crio-runc`. It is also required for any Gremlin installation that wishes to carry out Process Killer attacks at the host-level
+        path: gremlin.hostPID
+        x-descriptors:
+          - urn:alm:descriptor:com.tectonic.ui:booleanSwitch
+          - 'urn:alm:descriptor:com.tectonic.ui:fieldGroup:Gremlin'
+      - displayName: installK8sClient
+        description: Determines if the `chao` deployment should be installed. This deployment launches an agent that enabled Kubernetes targeting for Gremlin attacks
+        path: gremlin.installK8sClient
+        x-descriptors:
+          - urn:alm:descriptor:com.tectonic.ui:booleanSwitch
+          - 'urn:alm:descriptor:com.tectonic.ui:fieldGroup:Gremlin'
+      - displayName: Pull Policy
+        description: image pull policy for Gremlin image, 'Always' by default
+        path: image.pullPolicy
+        x-descriptors:
+          - 'urn:alm:descriptor:com.tectonic.ui:imagePullPolicy'
+          - 'urn:alm:descriptor:com.tectonic.ui:fieldGroup:GremlinImage'
+      - displayName: Image Repository
+        description: image repository for Chao image, 'gremlin/gremlin' by default
+        path: image.repository
+        x-descriptors:
+          - 'urn:alm:descriptor:com.tectonic.ui:text'
+          - 'urn:alm:descriptor:com.tectonic.ui:fieldGroup:GremlinImage'
+      - displayName: Image Tag
+        description: image version tag for Chao image, 'latest' by default
+        path: image.tag
+        x-descriptors:
+          - 'urn:alm:descriptor:com.tectonic.ui:text'
+          - 'urn:alm:descriptor:com.tectonic.ui:fieldGroup:GremlinImage'
+      - displayName: PrivilegeEscalation
+        description: Allows Gremlin containers privilege escalation powers
+        path: gremlin.podSecurity.allowPrivilegeEscalation
+        x-descriptors:
+          - 'urn:alm:descriptor:com.tectonic.ui:booleanSwitch'
+          - 'urn:alm:descriptor:com.tectonic.ui:fieldGroup:PodSecurity'
+      - displayName: Read Only Root Filesystem
+        description: Forces the Gremlin Daemonset containers to run with a read-only root filesystem, default set to 'False'
+        path: gremlin.podSecurity.readOnlyRootFilesystem
+        x-descriptors:
+          - 'urn:alm:descriptor:com.tectonic.ui:booleanSwitch'
+          - 'urn:alm:descriptor:com.tectonic.ui:fieldGroup:PodSecurity'
+      
+      - displayName: Container Driver
+        description: Specifies which container driver with which to run Gremlin, default set to 'crio-runc  '
+        path: gremlin.conatiner.driver
+        x-descriptors:
+          - 'urn:alm:descriptor:com.tectonic.ui:text'
+          - 'urn:alm:descriptor:com.tectonic.ui:fieldGroup:Gremlin'
+
+      - displayName: Security Component
+        description: Determines whether the Gremlin Daemonset should be annotated with the seccomp profile specified by gremlin.podSecurity.seccomp.profile
+        path: gremlin.podSecurity.seccomp.enabled
+        x-descriptors:
+          - 'urn:alm:descriptor:com.tectonic.ui:booleanSwitch'
+          - 'urn:alm:descriptor:com.tectonic.ui:fieldGroup:PodSecurity'
+      
+      - displayName: Security Component Profile
+        description: When this values is `localhost/gremlin`, Gremlin will create it's own custom seccomp profile
+        path: gremlin.podSecurity.seccomp.profile
+        x-descriptors:
+          - 'urn:alm:descriptor:com.tectonic.ui:text'
+          - 'urn:alm:descriptor:com.tectonic.ui:fieldGroup:PodSecurity'
+    
+      - displayName: Security Component Path
+        description: The absolute path pointing to the seccomp profile root on cluster nodes, default set to '/var/lib/kubelet/seccomp'
+        path: gremlin.podSecurity.seccomp.root
+        x-descriptors:
+          - 'urn:alm:descriptor:com.tectonic.ui:text'
+          - 'urn:alm:descriptor:com.tectonic.ui:fieldGroup:PodSecurity'
+      
+  description: |
+    ## Introduction
+
+    Gremlin provides you with the framework to safely, securely, and simply simulate real outages with an ever-growing library of attacks. Using Chaos Engineering to improve system resilience, Gremlin’s “Failure as a Service” makes it easy to find weaknesses in your system before they cause problems for your customers.
+
+    ## Overview
+
+    Gremlin allows targeting objects within your Kubernetes clusters. After selecting a cluster, you can filter the visible set of objects by selecting a namespace. Select any of your Deployments, ReplicaSets, StatefulSets, DaemonSets, or Pods. When one object is selected, all child objects will also be targeted. For example, when selecting a DaemonSet, all of the pods within will be selected.
+
+    The Gremlin operator aims to provide easy configuration and installation of the Gremlin Client components with secret-based authentication(Team ID and Team Secret) to get up and running quickly.
+
+    ## Usage
+
+    * Gremlin requires authentication during installation. Before deploying the Gremlin CR, make sure to change the Gremlin credentials(TeamID and TeamSecret)
+    * Deploy a basic Gremlin client on to the OpenShift cluster by creating a new Gremlin resource in the namespace where the operator is installed.
+
+    ```
+    apiVersion: gremlin.com/v1alpha1
+    kind: Gremlin
+    metadata:
+      name: gremlin-sample
+    spec:
+      gremlin:
+        container:
+          driver: crio-runc
+        hostPID: true
+        podSecurity:
+          seccomp:
+            enabled: true
+          securityContextConstraints:
+            create: true
+        secret:
+          clusterID: my-cluster
+          managed: true
+          teamID: "*******-******-******"
+          teamSecret: "*******-******-******"
+          type: secret
+    ```
+
+    ## Note
+
+    Creating the Gremlin CR while result in creation of a custom Security Context Contraint(SCC) which is required by the Gremlin Operator
+
+    ## Run Attacks
+
+    You can now run attacks on your cluster, including [Kubernetes attacks](https://app.gremlin.com/attacks/new/kubernetes).
+
+    See the [documentation](https://www.gremlin.com/docs/infrastructure-layer/kubernetes/) and repository on
+    [github](https://github.com/yashoza19/gremlin-operator) for more information.
+  displayName: Gremlin Operator (Helm)
+  icon:
+  - base64data: "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"
+    mediatype: ""
+  install:
+    spec:
+      clusterPermissions:
+      - rules:
+        - apiGroups:
+          - ""
+          resources:
+          - configmaps
+          - endpoints
+          - events
+          - persistentvolumeclaims
+          - pods
+          - secrets
+          - serviceaccounts
+          - services
+          - services/finalizers
+          verbs:
+          - '*'
+        - apiGroups:
+          - gremlin.com
+          resources:
+          - gremlins
+          - gremlins/status
+          - gremlins/finalizers
+          verbs:
+          - '*'
+        - apiGroups:
+          - rbac.authorization.k8s.io
+          resources:
+          - rolebindings
+          - roles
+          - clusterrolebindings
+          - clusterroles
+          verbs:
+          - '*'
+        - apiGroups:
+          - apps
+          resources:
+          - daemonsets
+          - deployments
+          verbs:
+          - '*'
+        - apiGroups:
+          - security.openshift.io
+          resources:
+          - securitycontextconstraints
+          verbs:
+          - '*'
+        - apiGroups:
+          - security.openshift.io
+          resourceNames:
+          - gremlin
+          resources:
+          - securitycontextconstraints
+          verbs:
+          - use
+        - apiGroups:
+          - authentication.k8s.io
+          resources:
+          - tokenreviews
+          verbs:
+          - create
+        - apiGroups:
+          - authorization.k8s.io
+          resources:
+          - subjectaccessreviews
+          verbs:
+          - create
+        serviceAccountName: gremlin-controller-manager
+      deployments:
+      - name: gremlin-controller-manager
+        spec:
+          replicas: 1
+          selector:
+            matchLabels:
+              control-plane: controller-manager
+          strategy: {}
+          template:
+            metadata:
+              labels:
+                control-plane: controller-manager
+            spec:
+              containers:
+              - args:
+                - --secure-listen-address=0.0.0.0:8443
+                - --upstream=http://127.0.0.1:8080/
+                - --logtostderr=true
+                - --v=10
+                image: registry.redhat.io/openshift4/ose-kube-rbac-proxy:v4.7.0
+                name: kube-rbac-proxy
+                ports:
+                - containerPort: 8443
+                  name: https
+                resources: {}
+              - args:
+                - --health-probe-bind-address=:8081
+                - --metrics-bind-address=127.0.0.1:8080
+                - --leader-elect
+                - --leader-election-id=gremlin
+                image: quay.io/yoza/gremlin-controller:2.16.2
+                livenessProbe:
+                  httpGet:
+                    path: /healthz
+                    port: 8081
+                  initialDelaySeconds: 15
+                  periodSeconds: 20
+                name: manager
+                readinessProbe:
+                  httpGet:
+                    path: /readyz
+                    port: 8081
+                  initialDelaySeconds: 5
+                  periodSeconds: 10
+                resources:
+                  limits:
+                    cpu: 100m
+                    memory: 1Gi
+                  requests:
+                    cpu: 100m
+                    memory: 60Mi
+                securityContext:
+                  allowPrivilegeEscalation: false
+              securityContext:
+                runAsNonRoot: true
+              serviceAccountName: gremlin-controller-manager
+              terminationGracePeriodSeconds: 10
+      permissions:
+      - rules:
+        - apiGroups:
+          - ""
+          - coordination.k8s.io
+          resources:
+          - configmaps
+          - leases
+          verbs:
+          - get
+          - list
+          - watch
+          - create
+          - update
+          - patch
+          - delete
+        - apiGroups:
+          - ""
+          resources:
+          - events
+          verbs:
+          - create
+          - patch
+        serviceAccountName: gremlin-controller-manager
+    strategy: deployment
+  installModes:
+  - supported: false
+    type: OwnNamespace
+  - supported: false
+    type: SingleNamespace
+  - supported: false
+    type: MultiNamespace
+  - supported: true
+    type: AllNamespaces
+  keywords:
+  - gremlin
+  links:
+  - name: Gremlin
+    url: https://www.gremlin.com/
+  maintainers:
+  - email: patrick.brennan@gremlin.com
+    name: Patrick Brenner
+  maturity: alpha
+  provider:
+    name: Gremlin
+  version: 2.16.2
