@@ -15,6 +15,9 @@ metadata:
               "container": {
                 "driver": "crio-runc"
               },
+              "collect":{
+                "processes": "true"
+              },
               "hostPID": true,
               "podSecurity": {
                 "seccomp": {
@@ -93,12 +96,6 @@ spec:
         x-descriptors:
           - 'urn:alm:descriptor:com.tectonic.ui:text'
           - 'urn:alm:descriptor:com.tectonic.ui:fieldGroup:Secret'
-      - displayName: Pull Policy
-        description: image pull policy for Chao image, 'Always' by default
-        path: chaoimage.pullPolicy
-        x-descriptors:
-          - 'urn:alm:descriptor:com.tectonic.ui:imagePullPolicy'
-          - 'urn:alm:descriptor:com.tectonic.ui:fieldGroup:ChaoImage'
       - displayName: Image Repository
         description: image repository for Chao image, 'gremlin/chao' by default
         path: chaoimage.repository
@@ -111,83 +108,18 @@ spec:
         x-descriptors:
           - 'urn:alm:descriptor:com.tectonic.ui:text'
           - 'urn:alm:descriptor:com.tectonic.ui:fieldGroup:ChaoImage'
-      - displayName: hostNetwork
-        description: This must be true for any Gremlin installation that wishes to carry out network attacks at the host-level
-        path: gremlin.hostNetwork
-        x-descriptors:
-          - urn:alm:descriptor:com.tectonic.ui:booleanSwitch
-          - 'urn:alm:descriptor:com.tectonic.ui:fieldGroup:Gremlin'
-      - displayName: hostPID
-        description: This must be true for Gremlin container drivers- `crio-runc`. It is also required for any Gremlin installation that wishes to carry out Process Killer attacks at the host-level
-        path: gremlin.hostPID
-        x-descriptors:
-          - urn:alm:descriptor:com.tectonic.ui:booleanSwitch
-          - 'urn:alm:descriptor:com.tectonic.ui:fieldGroup:Gremlin'
-      - displayName: installK8sClient
-        description: Determines if the `chao` deployment should be installed. This deployment launches an agent that enabled Kubernetes targeting for Gremlin attacks
-        path: gremlin.installK8sClient
-        x-descriptors:
-          - urn:alm:descriptor:com.tectonic.ui:booleanSwitch
-          - 'urn:alm:descriptor:com.tectonic.ui:fieldGroup:Gremlin'
-      - displayName: Pull Policy
-        description: image pull policy for Gremlin image, 'Always' by default
-        path: image.pullPolicy
-        x-descriptors:
-          - 'urn:alm:descriptor:com.tectonic.ui:imagePullPolicy'
-          - 'urn:alm:descriptor:com.tectonic.ui:fieldGroup:GremlinImage'
       - displayName: Image Repository
-        description: image repository for Chao image, 'gremlin/gremlin' by default
+        description: image repository for Gremlin image, 'gremlin/gremlin' by default
         path: image.repository
         x-descriptors:
           - 'urn:alm:descriptor:com.tectonic.ui:text'
           - 'urn:alm:descriptor:com.tectonic.ui:fieldGroup:GremlinImage'
       - displayName: Image Tag
-        description: image version tag for Chao image, 'latest' by default
+        description: image version tag for Gremlin image, 'latest' by default
         path: image.tag
         x-descriptors:
           - 'urn:alm:descriptor:com.tectonic.ui:text'
           - 'urn:alm:descriptor:com.tectonic.ui:fieldGroup:GremlinImage'
-      - displayName: PrivilegeEscalation
-        description: Allows Gremlin containers privilege escalation powers
-        path: gremlin.podSecurity.allowPrivilegeEscalation
-        x-descriptors:
-          - 'urn:alm:descriptor:com.tectonic.ui:booleanSwitch'
-          - 'urn:alm:descriptor:com.tectonic.ui:fieldGroup:PodSecurity'
-      - displayName: Read Only Root Filesystem
-        description: Forces the Gremlin Daemonset containers to run with a read-only root filesystem, default set to 'False'
-        path: gremlin.podSecurity.readOnlyRootFilesystem
-        x-descriptors:
-          - 'urn:alm:descriptor:com.tectonic.ui:booleanSwitch'
-          - 'urn:alm:descriptor:com.tectonic.ui:fieldGroup:PodSecurity'
-      
-      - displayName: Container Driver
-        description: Specifies which container driver with which to run Gremlin, default set to 'crio-runc  '
-        path: gremlin.conatiner.driver
-        x-descriptors:
-          - 'urn:alm:descriptor:com.tectonic.ui:text'
-          - 'urn:alm:descriptor:com.tectonic.ui:fieldGroup:Gremlin'
-
-      - displayName: Security Component
-        description: Determines whether the Gremlin Daemonset should be annotated with the seccomp profile specified by gremlin.podSecurity.seccomp.profile
-        path: gremlin.podSecurity.seccomp.enabled
-        x-descriptors:
-          - 'urn:alm:descriptor:com.tectonic.ui:booleanSwitch'
-          - 'urn:alm:descriptor:com.tectonic.ui:fieldGroup:PodSecurity'
-      
-      - displayName: Security Component Profile
-        description: When this values is `localhost/gremlin`, Gremlin will create it's own custom seccomp profile
-        path: gremlin.podSecurity.seccomp.profile
-        x-descriptors:
-          - 'urn:alm:descriptor:com.tectonic.ui:text'
-          - 'urn:alm:descriptor:com.tectonic.ui:fieldGroup:PodSecurity'
-    
-      - displayName: Security Component Path
-        description: The absolute path pointing to the seccomp profile root on cluster nodes, default set to '/var/lib/kubelet/seccomp'
-        path: gremlin.podSecurity.seccomp.root
-        x-descriptors:
-          - 'urn:alm:descriptor:com.tectonic.ui:text'
-          - 'urn:alm:descriptor:com.tectonic.ui:fieldGroup:PodSecurity'
-      
   description: |
     ## Introduction
 
