@@ -120,6 +120,11 @@ spec:
         x-descriptors:
           - 'urn:alm:descriptor:com.tectonic.ui:text'
           - 'urn:alm:descriptor:com.tectonic.ui:fieldGroup:GremlinImage'
+      - displayName: Service Discovery
+        description: Specifies whether Gremlin should collect process information
+        path: gremlin.collect.processes
+        x-descriptors:
+          - 'urn:alm:descriptor:com.tectonic.ui:booleanSwitch'
   description: |
     ## Introduction
 
