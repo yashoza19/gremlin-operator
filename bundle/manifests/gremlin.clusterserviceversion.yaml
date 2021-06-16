@@ -349,7 +349,7 @@ spec:
   - name: Gremlin
     url: https://www.gremlin.com/
   maintainers:
-  - email: patrick.brennan@gremlin.com
+  - email: patrickabrennan@gmail.com
     name: Patrick Brenner
   maturity: alpha
   provider:
